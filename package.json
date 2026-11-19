@@ -43,7 +43,11 @@
     "sharp": "^0.33.5"
   },
   "devDependencies": {
-    "electron": "^33.2.1",
+    "electron": "^33.4.11",
     "electron-builder": "^25.1.8"
+  },
+  "allowScripts": {
+    "electron@33.4.11": true,
+    "sharp@0.33.5": true
   }
 }
