@@ -14,3 +14,33 @@ button { font:inherit; }
 .progress-panel { padding:1.25rem; border:1px solid #c9d7b8; border-radius:var(--radius); background:#e7f3d7; }.progress-panel.is-hidden { display:none; }.progress-top { justify-content:space-between; font-size:.75rem; }.progress-top span,.progress-panel p { color:#718066; font:.625rem 'SF Mono','Cascadia Mono',monospace; }.progress-track { height:.4375rem; margin:.9375rem 0 .625rem; overflow:hidden; border-radius:.625rem; background:#cbdcb8; }.progress-fill { width:0; height:100%; border-radius:inherit; background:#86b747; transition:width .2s; }.progress-panel p { margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }.footer { display:flex; justify-content:space-between; padding-top:1.5625rem; border-top:1px solid var(--line); color:#9aa198; font:.625rem 'SF Mono','Cascadia Mono',monospace; }.toast { position:fixed; right:1.625rem; bottom:1.5rem; max-width:20.625rem; padding:.8125rem 1rem; border-radius:.5625rem; background:var(--ink); color:var(--accent); font:.6875rem 'SF Mono','Cascadia Mono',monospace; opacity:0; transform:translateY(.625rem); pointer-events:none; transition:opacity .2s,transform .2s; }.toast.is-visible { opacity:1; transform:translateY(0); }
 @media (max-width:51.25rem) { .app-shell { padding-inline:clamp(1rem,4vw,1.5rem); }.hero { padding-top:3.4375rem; }.source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.drop-zone { grid-column:1/-1; min-height:6.25rem; }.hero-badge { display:none; } }
 @media (max-width:35rem) { .topbar-note { display:none; }.hero h1 { font-size:clamp(2.75rem,13vw,3.1875rem); }.hero { padding:3rem 0; }.source-grid,.direction-toggle { grid-template-columns:1fr; }.output-row,.action-row,.footer { align-items:flex-start; flex-direction:column; gap:1.125rem; }.convert-button { width:100%; }.footer { gap:.375rem; } }
+
+/* Craft pass: a flatter, more authored utility surface. */
+:root { --radius:.5rem; }
+.status-dot { border-radius:.125rem; box-shadow:none; }
+.brand-mark { border-radius:.375rem; }
+.hero { display:grid; grid-template-columns:minmax(0,1.25fr) minmax(12rem,.75fr); gap:clamp(2rem,8vw,8rem); }
+.hero h1 { max-width:34rem; font-weight:700; }
+.hero-badge { justify-self:end; align-self:center; }
+.badge-icon { border:1px solid #c6d1bd; border-radius:.25rem; background:transparent; }
+.source-grid { grid-template-columns:1.15fr .85fr 1fr; gap:0; border-block:1px solid var(--ink); }
+.source-card,.drop-zone { min-height:8.5rem; border:0; border-right:1px solid var(--line); border-radius:0; background:transparent; }
+.source-card { padding:1.5rem 1.25rem; }
+.source-card:first-child { margin:.75rem 0; border-right:0; background:var(--ink); color:var(--paper); }
+.source-card:first-child .card-icon { color:var(--accent); }
+.source-card:nth-child(2) { border-top:2px solid var(--ink); }
+.drop-zone { border-left:1px solid var(--line); border-right:0; background:transparent; }
+.card-icon { width:1.5rem; height:1.5rem; padding:0; border-radius:0; background:transparent; font-size:1.5rem; }
+.card-copy { gap:.625rem; }
+.card-arrow { top:1.5rem; right:1.25rem; }
+.drop-zone.is-dragging { background:#e3f6c8; }
+.direction-toggle { gap:0; border-block:1px solid var(--ink); }
+.direction-option { min-height:5rem; border:0; border-right:1px solid var(--line); border-radius:0; }
+.direction-option:last-child { border-right:0; }
+.direction-option.is-active { position:relative; border-color:var(--line); background:transparent; color:var(--ink); }
+.direction-option.is-active::after { position:absolute; right:1.25rem; bottom:0; left:1.25rem; height:.25rem; background:var(--accent-deep); content:""; }
+.direction-option.is-active i { color:var(--accent-deep); }
+.convert-button { border-radius:.25rem; }
+.source-card:focus-visible,.direction-option:focus-visible,.convert-button:focus-visible { outline:.1875rem solid var(--accent-deep); outline-offset:.1875rem; }
+@media (max-width:51.25rem) { .hero { grid-template-columns:1fr; gap:2.5rem; }.hero-badge { justify-self:start; }.source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.source-card:first-child { margin:0; }.drop-zone { grid-column:1/-1; border-top:1px solid var(--line); border-left:0; } }
+@media (max-width:35rem) { .source-grid { grid-template-columns:1fr; }.source-card,.drop-zone { border-right:0; }.source-card:nth-child(2) { border-top:1px solid var(--line); }.drop-zone { border-top:1px solid var(--line); }.direction-option { min-height:4.5rem; } }
