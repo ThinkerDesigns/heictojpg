@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Switchback — image conversion, without the fuss</title>
+    <link rel="stylesheet" href="../node_modules/@phosphor-icons/web/src/regular/style.css" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark"><i class="ph ph-arrows-left-right"></i></div>
+          <div>
+            <div class="brand-name">Switchback</div>
+            <div class="brand-caption">image converter</div>
+          </div>
+        </div>
+        <div class="topbar-note"><span class="status-dot"></span>runs locally on your machine</div>
+      </header>
+
+      <section class="hero">
+        <div>
+          <p class="eyebrow">HEIC / JPEG · BATCH READY</p>
+          <h1>Change formats.<br /><em>Keep the moment.</em></h1>
+          <p class="hero-copy">A small, thoughtful converter for turning camera files into something every device can open.</p>
+        </div>
+        <div class="hero-badge"><i class="ph ph-lock-simple"></i><span>Files stay<br />on-device</span></div>
+      </section>
+
+      <section class="workspace" aria-label="Conversion workspace">
+        <div class="workspace-heading">
+          <div><span class="step-number">01</span><h2>Pick your ingredients</h2></div>
+          <span class="selection-count" id="selection-count">Nothing selected</span>
+        </div>
+
+        <div class="source-grid">
+          <button class="source-card" id="choose-files" type="button">
+            <span class="card-icon"><i class="ph ph-files"></i></span>
+            <span class="card-copy"><strong>Choose files</strong><small>One or a whole handful</small></span>
+            <i class="ph ph-arrow-up-right card-arrow"></i>
+          </button>
+          <button class="source-card" id="choose-folder" type="button">
+            <span class="card-icon"><i class="ph ph-folder-open"></i></span>
+            <span class="card-copy"><strong>Choose a folder</strong><small>We’ll look inside, too</small></span>
+            <i class="ph ph-arrow-up-right card-arrow"></i>
+          </button>
+          <div class="drop-zone" id="drop-zone">
+            <i class="ph ph-download-simple"></i>
+            <span>or drag files here</span>
+            <small>HEIC, HEIF, JPG, JPEG</small>
+          </div>
+        </div>
+
+        <div class="workspace-heading format-heading">
+          <div><span class="step-number">02</span><h2>Choose a direction</h2></div>
+        </div>
+
+        <div class="direction-toggle" role="group" aria-label="Conversion direction">
+          <button class="direction-option is-active" data-mode="heic-to-jpg" type="button"><span>HEIC</span><i class="ph ph-arrow-right"></i><span>JPG</span><small>share-ready</small></button>
+          <button class="direction-option" data-mode="jpg-to-heic" type="button"><span>JPG</span><i class="ph ph-arrow-right"></i><span>HEIC</span><small>space-saving</small></button>
+        </div>
+
+        <div class="output-row">
+          <div class="output-label"><span class="step-number">03</span><div><h2>Send the results to</h2><p id="output-path">Choose an output folder</p></div></div>
+          <button class="outline-button" id="choose-output" type="button"><i class="ph ph-folder-notch-open"></i> Pick folder</button>
+        </div>
+
+        <div class="action-row">
+          <div class="privacy-note"><i class="ph ph-shield-check"></i><span>No upload. No account.<br />Just a local conversion.</span></div>
+          <button class="convert-button" id="convert-button" type="button" disabled><span>Convert images</span><i class="ph ph-arrow-up-right"></i></button>
+        </div>
+      </section>
+
+      <section class="progress-panel is-hidden" id="progress-panel">
+        <div class="progress-top"><strong id="progress-title">Converting your images</strong><span id="progress-count">0 / 0</span></div>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+        <p id="progress-file">Getting things ready…</p>
+      </section>
+
+      <footer class="footer"><span>Made for the photos you already have.</span><span>v1.0 · macOS + Windows</span></footer>
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
