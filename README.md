@@ -38,6 +38,10 @@ npm run dist:win
 
 The finished installers land in `dist/`. You need to build each installer on its target operating system (or set up the relevant Electron Builder signing and cross-build tooling). The app itself is the same on both platforms.
 
+## Host the browser version
+
+The static web version lives in [`web/`](web/). Copy that folder into an Apache document root or a subfolder on your site. It needs no Node process or build step. See [`web/README.md`](web/README.md) for the exact layout and the one browser-specific limitation.
+
 ## A note on HEIC
 
 HEIC input is handled by `heic-convert`. For JPEG-to-HEIC output, the app uses the bundled encoder when it is available, falls back to macOS `sips`, and looks for ImageMagick’s `magick` command on Windows. If your Windows build says HEIC encoding is unavailable, install ImageMagick and relaunch the app.
