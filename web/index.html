@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-type="software" data-site-kind="software">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Switchback is a private, browser-based HEIC to JPG converter." />
+    <meta name="theme-color" content="#111412" />
+    <title>Switchback — image conversion, without the fuss</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand-lockup">
+          <div class="brand-mark" aria-hidden="true">↔</div>
+          <div><div class="brand-name">Switchback</div><div class="brand-caption">image converter</div></div>
+        </div>
+        <div class="topbar-note"><span class="status-dot"></span>runs in your browser</div>
+      </header>
+
+      <section class="hero" data-enter>
+        <div>
+          <p class="eyebrow">HEIC / JPEG · WEB EDITION</p>
+          <h1>Change formats.<br /><em>Keep the moment.</em></h1>
+          <p class="hero-copy">A private browser tool for turning camera files into something every device can open.</p>
+        </div>
+        <div class="hero-badge"><span class="badge-icon">⌁</span><span>Files stay<br />in your browser</span></div>
+      </section>
+
+      <section class="workspace" aria-label="Conversion workspace">
+        <div class="workspace-heading"><div><span class="step-number">01</span><h2>Pick your ingredients</h2></div><span class="selection-count" id="selection-count">Nothing selected</span></div>
+        <div class="source-grid">
+          <label class="source-card" for="file-input"><span class="card-icon">＋</span><span class="card-copy"><strong>Choose files</strong><small>One or a whole handful</small></span><span class="card-arrow">↗</span></label>
+          <label class="source-card" for="folder-input"><span class="card-icon">□</span><span class="card-copy"><strong>Choose a folder</strong><small>We’ll look inside, too</small></span><span class="card-arrow">↗</span></label>
+          <div class="drop-zone" id="drop-zone"><span class="drop-icon">↓</span><span>or drag files here</span><small>HEIC, HEIF, JPG, JPEG</small></div>
+        </div>
+        <input id="file-input" type="file" accept=".heic,.heif,.jpg,.jpeg,image/heic,image/jpeg" multiple hidden />
+        <input id="folder-input" type="file" accept=".heic,.heif,.jpg,.jpeg,image/heic,image/jpeg" webkitdirectory directory multiple hidden />
+
+        <div class="workspace-heading format-heading"><div><span class="step-number">02</span><h2>Choose a direction</h2></div></div>
+        <div class="direction-toggle" role="group" aria-label="Conversion direction">
+          <button class="direction-option is-active" data-mode="heic-to-jpg" type="button"><span>HEIC</span><i>→</i><span>JPG</span><small>share-ready · works in browser</small></button>
+          <button class="direction-option" data-mode="jpg-to-heic" type="button"><span>JPG</span><i>→</i><span>HEIC</span><small>use the desktop app for this</small></button>
+        </div>
+
+        <div class="output-row"><div class="output-label"><span class="step-number">03</span><div><h2>Results go to</h2><p>your browser’s Downloads folder</p></div></div><span class="web-note">No upload. No account.</span></div>
+        <div class="action-row"><div class="privacy-note"><span>◉</span><span>Everything happens locally<br />inside this browser tab.</span></div><button class="convert-button" id="convert-button" type="button" disabled><span>Convert images</span><span>↗</span></button></div>
+      </section>
+
+      <section class="progress-panel is-hidden" id="progress-panel"><div class="progress-top"><strong id="progress-title">Making share-ready JPGs</strong><span id="progress-count">0 / 0</span></div><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><p id="progress-file">Getting things ready…</p></section>
+      <footer class="footer"><span>Made for the photos you already have.</span><span>Web edition · no upload</span></footer>
+    </main>
+    <div class="toast" id="toast" role="status"></div>
+    <script src="app.js"></script>
+  </body>
+</html>
