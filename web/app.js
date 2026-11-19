@@ -44,10 +44,10 @@ document.querySelectorAll('.direction-option').forEach((button) => button.addEve
 }));
 
 function loadHeicDecoder() {
-  if (window.heic2any) return Promise.resolve();
+  if (window.HeicTo) return Promise.resolve();
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/heic-to@1.6.7/dist/iife/heic-to.js';
     script.onload = resolve;
     script.onerror = () => reject(new Error('The browser converter could not load. Check your connection and try again.'));
     document.head.appendChild(script);
@@ -65,18 +65,6 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-async function convertOnServer(file) {
-  const body = new FormData();
-  body.append('file', file, file.name);
-  const response = await fetch('convert.php', { method: 'POST', body });
-  if (response.status === 404) return null;
-  if (!response.ok) {
-    const detail = await response.json().catch(() => ({}));
-    throw new Error(detail.error || 'The server could not convert this image.');
-  }
-  return response.blob();
-}
-
 convertButton.addEventListener('click', async () => {
   if (state.mode !== 'heic-to-jpg') return;
   progressPanel.classList.remove('is-hidden');
@@ -88,12 +76,7 @@ convertButton.addEventListener('click', async () => {
     let converted = 0;
     for (const file of matching) {
       $('#progress-file').textContent = file.name;
-      let blob = await convertOnServer(file);
-      if (!blob) {
-        await loadHeicDecoder();
-        const result = await window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
-        blob = Array.isArray(result) ? result[0] : result;
-      }
+      const blob = await window.HeicTo({ blob: file, type: 'image/jpeg', quality: 0.92 });
       const filename = `${file.name.replace(/\.(heic|heif)$/i, '')}.jpg`;
       downloadBlob(blob, filename);
       converted += 1;
