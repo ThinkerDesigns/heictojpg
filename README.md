@@ -40,7 +40,9 @@ The finished installers land in `dist/`. You need to build each installer on its
 
 ## A note on HEIC
 
-HEIC support is handled by `heic-convert`, while JPEG-to-HEIC output is handled by `sharp` using the HEVC encoder available in its bundled `libheif` build. If a particular camera’s HEIC variant is unusual, the app will stop on that file and show the error rather than silently producing a bad image.
+HEIC input is handled by `heic-convert`. For JPEG-to-HEIC output, the app uses the bundled encoder when it is available, falls back to macOS `sips`, and looks for ImageMagick’s `magick` command on Windows. If your Windows build says HEIC encoding is unavailable, install ImageMagick and relaunch the app.
+
+If a particular camera’s HEIC variant is unusual, the app will stop on that file and show the error rather than silently producing a bad image.
 
 ## Project shape
 
