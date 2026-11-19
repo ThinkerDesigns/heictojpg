@@ -47,4 +47,4 @@ button { font:inherit; }
 @media (max-width:51.25rem) { .hero { grid-template-columns:1fr; gap:2.5rem; }.hero-badge { justify-self:start; }.source-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }.source-card:first-child { margin:0; }.drop-zone { grid-column:1/-1; border-top:1px solid var(--line); border-left:0; } }
 @media (max-width:35rem) { .source-grid { grid-template-columns:1fr; }.source-card,.drop-zone { border-right:0; }.source-card:nth-child(2) { border-top:1px solid var(--line); }.drop-zone { border-top:1px solid var(--line); }.direction-option { min-height:4.5rem; } }
 
-.eyebrow,.hero-badge,.brand-caption,.topbar-note,.step-number,.selection-count,.direction-option small,.output-label p,.web-note,.privacy-note,.progress-top span,.progress-panel p,.footer,.toast { font-family:var(--font-mono); }
+.eyebrow,.hero-badge,.brand-caption,.topbar-note,.step-number,.selection-count,.drop-zone small,.direction-option small,.output-label p,.web-note,.privacy-note,.progress-top span,.progress-panel p,.footer,.toast { font-family:var(--font-mono); }
