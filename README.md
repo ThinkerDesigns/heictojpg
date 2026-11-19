@@ -32,7 +32,7 @@ Run these from the project folder:
 # macOS (.dmg)
 npm run dist:mac
 
-# Windows installer (.exe)
+# Windows x64 installer (.exe)
 npm run dist:win
 ```
 

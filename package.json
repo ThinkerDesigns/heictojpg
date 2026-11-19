@@ -8,8 +8,8 @@
   "scripts": {
     "start": "electron .",
     "dist:mac": "electron-builder --mac dmg",
-    "dist:win": "electron-builder --win nsis",
-    "dist": "electron-builder --mac dmg --win nsis"
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist": "electron-builder --mac dmg --win nsis --x64"
   },
   "build": {
     "appId": "com.switchback.converter",
