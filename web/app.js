@@ -65,6 +65,18 @@ function downloadBlob(blob, filename) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+async function convertOnServer(file) {
+  const body = new FormData();
+  body.append('file', file, file.name);
+  const response = await fetch('convert.php', { method: 'POST', body });
+  if (response.status === 404) return null;
+  if (!response.ok) {
+    const detail = await response.json().catch(() => ({}));
+    throw new Error(detail.error || 'The server could not convert this image.');
+  }
+  return response.blob();
+}
+
 convertButton.addEventListener('click', async () => {
   if (state.mode !== 'heic-to-jpg') return;
   progressPanel.classList.remove('is-hidden');
@@ -76,8 +88,12 @@ convertButton.addEventListener('click', async () => {
     let converted = 0;
     for (const file of matching) {
       $('#progress-file').textContent = file.name;
-      const result = await window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
-      const blob = Array.isArray(result) ? result[0] : result;
+      let blob = await convertOnServer(file);
+      if (!blob) {
+        await loadHeicDecoder();
+        const result = await window.heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+        blob = Array.isArray(result) ? result[0] : result;
+      }
       const filename = `${file.name.replace(/\.(heic|heif)$/i, '')}.jpg`;
       downloadBlob(blob, filename);
       converted += 1;
