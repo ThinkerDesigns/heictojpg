@@ -1,0 +1,49 @@
+{
+  "name": "switchback",
+  "version": "1.0.0",
+  "description": "A calm, batch-friendly HEIC and JPEG converter for macOS and Windows.",
+  "main": "main.js",
+  "author": "Switchback",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac dmg",
+    "dist:win": "electron-builder --win nsis",
+    "dist": "electron-builder --mac dmg --win nsis"
+  },
+  "build": {
+    "appId": "com.switchback.converter",
+    "productName": "Switchback",
+    "asar": true,
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.photography",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "@phosphor-icons/web": "^2.1.2",
+    "heic-convert": "^2.1.0",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "electron": "^33.2.1",
+    "electron-builder": "^25.1.8"
+  }
+}
