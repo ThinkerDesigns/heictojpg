@@ -1,8 +1,11 @@
 const { app, BrowserWindow, dialog, ipcMain } = require('electron');
 const path = require('node:path');
 const fs = require('node:fs/promises');
+const { execFile } = require('node:child_process');
+const { promisify } = require('node:util');
 const heicConvert = require('heic-convert');
 const sharp = require('sharp');
+const execFileAsync = promisify(execFile);
 
 const SOURCE_EXTENSIONS = {
   'heic-to-jpg': new Set(['.heic', '.heif']),
@@ -76,7 +79,23 @@ async function convertOne(inputPath, destinationPath, mode) {
     return;
   }
 
-  await sharp(inputPath).heif({ compression: 'hevc', quality: 90 }).toFile(destinationPath);
+  try {
+    await sharp(inputPath).heif({ compression: 'hevc', quality: 90 }).toFile(destinationPath);
+    return;
+  } catch (error) {
+    if (!/Unsupported compression|heifsave/i.test(error.message)) throw error;
+  }
+
+  if (process.platform === 'darwin') {
+    await execFileAsync('/usr/bin/sips', ['-s', 'format', 'heic', inputPath, '--out', destinationPath]);
+    return;
+  }
+
+  try {
+    await execFileAsync('magick', [inputPath, destinationPath]);
+  } catch {
+    throw new Error('HEIC encoding is not available in this build. Install ImageMagick on Windows, or use a build with a HEVC encoder.');
+  }
 }
 
 ipcMain.handle('choose-files', async () => {
