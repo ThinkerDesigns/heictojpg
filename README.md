@@ -40,7 +40,7 @@ The finished installers land in `dist/`. You need to build each installer on its
 
 ## Host the browser version
 
-The Apache-ready web version lives in [`web/`](web/). Copy that folder into an Apache document root or a subfolder on your site. It needs no Node process or build step. When PHP and an HEIC-capable ImageMagick install are available, `convert.php` handles large originals server-side; otherwise the page falls back to browser conversion. See [`web/README.md`](web/README.md) for setup details.
+The Apache-ready web version lives in [`web/`](web/). Copy that folder into an Apache document root or a subfolder on your site. It needs no Node process, PHP, or build step. HEIC conversion runs in the browser. See [`web/README.md`](web/README.md) for setup details.
 
 ## A note on HEIC
 
