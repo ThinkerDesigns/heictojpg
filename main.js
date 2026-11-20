@@ -136,7 +136,10 @@ ipcMain.handle('choose-output', async () => {
 });
 
 ipcMain.handle('convert', async (event, { inputPaths, outputPath, mode }) => {
-  if (!Array.isArray(inputPaths) || !inputPaths.length || !outputPath || !SOURCE_EXTENSIONS[mode]) {
+  const hasFolderInput = Array.isArray(inputPaths) && inputPaths.some((inputPath) => {
+    try { return fsSync.statSync(inputPath).isDirectory(); } catch { return false; }
+  });
+  if (!Array.isArray(inputPaths) || !inputPaths.length || (!outputPath && !hasFolderInput) || !SOURCE_EXTENSIONS[mode]) {
     throw new Error('Choose at least one input and an output folder.');
   }
 
