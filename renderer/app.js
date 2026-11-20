@@ -1,4 +1,4 @@
-const state = { inputPaths: [], outputPath: '', mode: 'heic-to-jpg' };
+const state = { inputPaths: [], outputPath: '', mode: 'heic-to-jpg', hasFolder: false };
 const $ = (selector) => document.querySelector(selector);
 const selectionCount = $('#selection-count');
 const outputPath = $('#output-path');
@@ -15,8 +15,8 @@ function showToast(message) {
 
 function refresh() {
   selectionCount.textContent = state.inputPaths.length ? `${state.inputPaths.length} item${state.inputPaths.length === 1 ? '' : 's'} selected` : 'Nothing selected';
-  outputPath.textContent = state.outputPath || 'Choose an output folder';
-  convertButton.disabled = !state.inputPaths.length || !state.outputPath;
+  outputPath.textContent = state.hasFolder ? 'Folder batch → ZIP saved to Downloads' : (state.outputPath || 'Choose an output folder');
+  convertButton.disabled = !state.inputPaths.length || (!state.hasFolder && !state.outputPath);
 }
 
 function addInputs(paths) {
@@ -25,7 +25,11 @@ function addInputs(paths) {
 }
 
 $('#choose-files').addEventListener('click', async () => addInputs(await window.switchback.chooseFiles()));
-$('#choose-folder').addEventListener('click', async () => addInputs(await window.switchback.chooseFolder()));
+$('#choose-folder').addEventListener('click', async () => {
+  const folders = await window.switchback.chooseFolder();
+  if (folders.length) state.hasFolder = true;
+  addInputs(folders);
+});
 $('#choose-output').addEventListener('click', async () => {
   const folder = await window.switchback.chooseOutput();
   if (folder) { state.outputPath = folder; refresh(); }
@@ -55,8 +59,11 @@ convertButton.addEventListener('click', async () => {
   try {
     const result = await window.switchback.convert(state);
     $('#progress-count').textContent = `${result.converted} converted`;
-    $('#progress-file').textContent = result.converted ? 'Done. Your new files are ready.' : 'No matching images found in the selection.';
-    showToast(result.converted ? `${result.converted} image${result.converted === 1 ? '' : 's'} converted.` : 'No matching images found.');
+    const skippedNote = result.skipped ? ` ${result.skipped} existing image${result.skipped === 1 ? '' : 's'} skipped.` : '';
+    $('#progress-file').textContent = result.converted
+      ? (result.archiveName ? `Done. ${result.archiveName} is in Downloads.` : 'Done. Your new files are ready.')
+      : 'No matching images found in the selection.';
+    showToast(result.converted ? `${result.converted} image${result.converted === 1 ? '' : 's'} converted.${skippedNote}` : 'No matching images found.');
   } catch (error) {
     $('#progress-title').textContent = 'That conversion did not finish';
     $('#progress-file').textContent = error.message;
