@@ -10,6 +10,8 @@ It runs on macOS and Windows, and it is deliberately small: no account, no uploa
 - Convert JPG/JPEG files to HEIC.
 - Take individual files, folders, or a mixture of both.
 - Search inside selected folders recursively.
+- Skip files that are already in the requested output format.
+- Package folder conversions as a ZIP in your Downloads folder.
 - Keep each run local to your computer.
 - Write results to a folder you choose, without overwriting existing files.
 
