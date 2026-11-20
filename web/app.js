@@ -1,4 +1,4 @@
-const state = { files: [], mode: 'heic-to-jpg' };
+const state = { files: [], mode: 'heic-to-jpg', folderSelected: false };
 const $ = (selector) => document.querySelector(selector);
 const fileInput = $('#file-input');
 const folderInput = $('#folder-input');
@@ -19,7 +19,8 @@ function refresh() {
   convertButton.disabled = !state.files.length || state.mode !== 'heic-to-jpg';
 }
 
-function addFiles(files) {
+function addFiles(files, fromFolder = false) {
+  if (fromFolder) state.folderSelected = true;
   const known = new Set(state.files.map((file) => `${file.name}:${file.size}:${file.lastModified}`));
   for (const file of files) {
     const key = `${file.name}:${file.size}:${file.lastModified}`;
@@ -29,7 +30,7 @@ function addFiles(files) {
 }
 
 fileInput.addEventListener('change', () => addFiles([...fileInput.files]));
-folderInput.addEventListener('change', () => addFiles([...folderInput.files]));
+folderInput.addEventListener('change', () => addFiles([...folderInput.files], true));
 
 const dropZone = $('#drop-zone');
 ['dragenter', 'dragover'].forEach((eventName) => dropZone.addEventListener(eventName, (event) => { event.preventDefault(); dropZone.classList.add('is-dragging'); }));
@@ -54,6 +55,17 @@ function loadHeicDecoder() {
   });
 }
 
+function loadZipLibrary() {
+  if (window.JSZip) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('The ZIP download could not load. Check your connection and try again.'));
+    document.head.appendChild(script);
+  });
+}
+
 function downloadBlob(blob, filename) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
@@ -73,18 +85,41 @@ convertButton.addEventListener('click', async () => {
   try {
     await loadHeicDecoder();
     const matching = state.files.filter((file) => ['.heic', '.heif'].includes(file.name.slice(file.name.lastIndexOf('.')).toLowerCase()));
+    const skipped = state.folderSelected
+      ? state.files.filter((file) => ['.jpg', '.jpeg'].includes(file.name.slice(file.name.lastIndexOf('.')).toLowerCase())).length
+      : 0;
+    let zip = null;
+    if (state.folderSelected) {
+      await loadZipLibrary();
+      zip = new window.JSZip();
+    }
     let converted = 0;
     for (const file of matching) {
       $('#progress-file').textContent = file.name;
       const blob = await window.HeicTo({ blob: file, type: 'image/jpeg', quality: 0.92 });
       const filename = `${file.name.replace(/\.(heic|heif)$/i, '')}.jpg`;
-      downloadBlob(blob, filename);
+      if (zip) {
+        const archivePath = file.webkitRelativePath
+          ? file.webkitRelativePath.replace(/\.(heic|heif)$/i, '.jpg')
+          : filename;
+        zip.file(archivePath, blob);
+      } else {
+        downloadBlob(blob, filename);
+      }
       converted += 1;
       $('#progress-count').textContent = `${converted} / ${matching.length}`;
       $('#progress-fill').style.width = `${Math.round((converted / matching.length) * 100)}%`;
     }
-    $('#progress-file').textContent = converted ? 'Done. Files were sent to Downloads.' : 'No HEIC or HEIF files found in the selection.';
-    showToast(converted ? `${converted} JPG download${converted === 1 ? '' : 's'} started.` : 'No HEIC or HEIF files found.');
+    if (zip && converted) {
+      const rootName = matching[0].webkitRelativePath?.split('/')[0] || 'converted-images';
+      const archive = await zip.generateAsync({ type: 'blob' });
+      downloadBlob(archive, `${rootName}-converted.zip`);
+    }
+    const skippedNote = skipped ? ` ${skipped} existing JPG${skipped === 1 ? '' : 's'} skipped.` : '';
+    $('#progress-file').textContent = converted
+      ? (zip ? 'Done. The ZIP was sent to Downloads.' : 'Done. Files were sent to Downloads.')
+      : 'No HEIC or HEIF files found in the selection.';
+    showToast(converted ? (zip ? `ZIP download started.${skippedNote}` : `${converted} JPG download${converted === 1 ? '' : 's'} started.${skippedNote}`) : 'No HEIC or HEIF files found.');
   } catch (error) {
     $('#progress-file').textContent = error.message;
     showToast(error.message);
